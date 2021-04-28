@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="common/header :: common-header"></div>
+    <title>Manage Users</title>
+</head>
+<body>
+<div th:replace="common/header :: navbar"></div>
+<div class="m-3">
+    <h2>Manage Users</h2>
+    <a th:href="@{/users/new}" class="btn btn-outline-primary">
+        <span class="text">New User</span><i class="fa fa-user-plus"></i>
+    </a>
+    &nbsp;|&nbsp;
+    <a th:href="@{/users/export/excel}" class="btn btn-outline-primary">
+        <span class="text">Export to Excel</span><i class="fas fa-file-excel"></i>
+    </a>
+</div>
+
+<div th:if="${message != null}" th:text="${message}" class="alert alert-success text-center"></div>
+
+<div class="m-3">
+    <form th:action="@{/users/page/1}" class="form-inline">
+        <input type="hidden" name="sortBy" th:value="${sortBy}">
+        <input type="hidden" name="sortOrder" th:value="${sortOrder}">
+
+        <input type="search" name="keyword" th:value="${keyword}" class="form-control" placeholder="Search" required>
+        <button class="btn btn-primary mx-2" type="submit">Search</button>
+        <button class="btn btn-secondary" type="button" onclick="clearFilter()">Clear</button>
+    </form>
+</div>
+
+<div>
+    <table class="table table-bordered table-striped table-hover table-responsive-xl">
+        <thead class="thead-dark">
+        <tr>
+            <th th:replace="common/fragments :: column-link('id', 'User ID')">
+            <th>Photo</th>
+            <th th:replace="common/fragments :: column-link('email', 'Email')">
+            <th th:replace="common/fragments :: column-link('firstName', 'First Name')">
+            <th th:replace="common/fragments :: column-link('lastName', 'Last Name')">
+            <th>Roles</th>
+            <th th:replace="common/fragments :: column-link('enabled', 'Enabled')">
+
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.id}"></td>
+            <td>
+                <img th:if="${user.photos == null}" class="img-sm" th:src="@{/images/user-default.png}">
+                <img th:if="${user.photos != null}" class="img-sm" th:src="@{${user.getPhotosImagePath()}}">
+            </td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.roles}"></td>
+            <td>
+                <a th:if="${user.enabled}" th:href="@{'users/' + ${user.id}(enabled='false')}"
+                   class="btn rounded-circle btn-icon btn-success" title="Disable User">
+                    <i class="fas fa-check-circle"></i>
+                </a>
+                <a th:unless="${user.enabled}" th:href="@{'users/' + ${user.id}(enabled='true')}"
+                   class="btn rounded-circle btn-icon btn-secondary" title="Enable User">
+                    <i class="fas fa-check-circle"></i>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{'/users/edit/' + ${user.id}}" class="btn rounded-circle btn-icon btn-success"
+                   title="Edit user">
+                    <i class="fa fa-edit"></i>
+                </a>
+                &nbsp;
+                <a th:href="@{'/users/delete/' + ${user.id}}" class="btn rounded-circle btn-icon btn-danger link-delete"
+                   th:userId="${user.id}" title="Delete user">
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center m-1" th:if="${totalUsers > 0}">
+    <p class="text-dark" th:text="|Showing users ${startCount} to ${endCount} of ${totalUsers}|"></p>
+</div>
+<div class="text-center m-1" th:unless="${totalUsers > 0}">
+    <p class="text-dark">No users found</p>
+</div>
+
+<div th:if="${totalPages > 0}">
+    <nav aria-label="Users page navigation">
+        <ul class="pagination justify-content-center">
+            <li th:classappend="${currentPage == 1} ? 'disabled'" class="page-item">
+                <a th:replace="common/fragments :: page-link(1, 'First')"></a>
+            </li>
+
+            <li th:classappend="${currentPage == 1} ? 'disabled'" class="page-item">
+                <a th:replace="common/fragments :: page-link(${currentPage - 1}, 'Previous')"></a>
+            </li>
+
+            <li th:classappend="${currentPage == page} ? 'active'" th:each="page : ${#numbers.sequence(1, totalPages)}"
+                class="page-item">
+                <a th:replace="common/fragments :: page-link(${page}, ${page})"></a>
+            </li>
+
+            <li th:classappend="${currentPage == totalPages} ? 'disabled'" class="page-item">
+                <a th:replace="common/fragments :: page-link(${currentPage + 1}, 'Next')"></a>
+            </li>
+
+            <li th:classappend="${currentPage == totalPages} ? 'disabled'" class="page-item">
+                <a th:replace="common/fragments :: page-link(${totalPages}, 'Last')"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="modal fade" id="deleteConfirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">Delete Confirmation</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <span id="confirmBody"></span>
+            </div>
+
+            <div class="modal-footer">
+                <a href="" class="btn btn-success" id="deleteButton">Delete</a>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="common/header :: footer"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            link = $(this);
+            userId = link.attr("userId");
+            $("#deleteButton").attr("href", link.attr("href"));
+            $("#confirmBody").text("Are you sure you want to delete user with id " + userId + "?");
+            $("#deleteConfirmModal").modal();
+        })
+    });
+
+    function clearFilter() {
+        window.location = "[[@{/users}]]";
+    }
+</script>
+</body>
+</html>
