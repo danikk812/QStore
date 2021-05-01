@@ -68,6 +68,27 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User updateAccount(User userInForm) {
+        User userById = userRepository.findById(userInForm.getId()).get();
+        
+        if (!userInForm.getPassword().isEmpty()) {
+            userById.setPassword(userInForm.getPassword());
+            encodePassword(userById);
+        }
+
+        if (userInForm.getPhotos() != null) {
+            userById.setPhotos(userInForm.getPhotos());
+
+        }
+
+        userById.setFirstName(userInForm.getFirstName());
+        userById.setLastName(userInForm.getLastName());
+        return userRepository.save(userById);
+    }
+
+    public User getByEmail(String email) {
+        return userRepository.getUserByEmail(email);
+    }
     public boolean isEmailExist(Long id, String email) {
         User userByEmail = userRepository.getUserByEmail(email);
 

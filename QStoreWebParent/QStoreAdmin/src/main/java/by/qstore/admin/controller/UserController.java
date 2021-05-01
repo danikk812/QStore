@@ -57,7 +57,7 @@ public class UserController {
 
         modelAndView.addObject("userList", userList);
 
-        modelAndView.setViewName("users");
+        modelAndView.setViewName("user/users");
         return modelAndView;
     }
 
@@ -71,7 +71,7 @@ public class UserController {
         modelAndView.addObject("roleList", roleList);
         modelAndView.addObject("pageTitle", "Create New User");
 
-        modelAndView.setViewName("add_user");
+        modelAndView.setViewName("user/add_user");
         return modelAndView;
     }
 
@@ -89,10 +89,9 @@ public class UserController {
         } else {
             if (user.getPhotos().isEmpty()) {
                 user.setPhotos(null);
-                userService.save(user);
             }
+                userService.save(user);
         }
-        userService.save(user);
         redirectAttributes.addFlashAttribute("message", "The user has been saved successfully");
         modelAndView.setViewName(getRedirectURLtoUser(user));
         return modelAndView;
@@ -110,7 +109,7 @@ public class UserController {
             modelAndView.addObject("roleList", roleList);
             modelAndView.addObject("pageTitle", "Edit User #" + id);
 
-            modelAndView.setViewName("add_user");
+            modelAndView.setViewName("user/add_user");
             return modelAndView;
         } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
@@ -132,8 +131,8 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("/users/{id}")
-    public ModelAndView updateUserEnabledStatus(@PathVariable("id") Long id, @RequestParam("enabled") boolean enabled,
+    @GetMapping("/users/{id}/enabled/{status}")
+    public ModelAndView updateUserEnabledStatus(@PathVariable("id") Long id, @PathVariable("status") boolean enabled,
                                                 RedirectAttributes redirectAttributes, ModelAndView modelAndView) {
         userService.updateUserEnableStatus(id, enabled);
         String status = enabled ? "enabled" : "disabled";

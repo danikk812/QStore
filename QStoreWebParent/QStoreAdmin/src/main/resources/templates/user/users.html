@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="common/header :: common-header"></div>
-    <title>Manage Users</title>
-</head>
+<head th:replace="common/header :: page-header('Users - QStore Admin')"></head>
 <body>
 <div th:replace="common/header :: navbar"></div>
 <div class="m-3">
@@ -57,11 +54,11 @@
             <td th:text="${user.lastName}"></td>
             <td th:text="${user.roles}"></td>
             <td>
-                <a th:if="${user.enabled}" th:href="@{'users/' + ${user.id}(enabled='false')}"
+                <a th:if="${user.enabled}" th:href="@{'users/' + ${user.id} + '/enabled/false'}"
                    class="btn rounded-circle btn-icon btn-success" title="Disable User">
                     <i class="fas fa-check-circle"></i>
                 </a>
-                <a th:unless="${user.enabled}" th:href="@{'users/' + ${user.id}(enabled='true')}"
+                <a th:unless="${user.enabled}" th:href="@{'users/' + ${user.id} + '/enabled/true'}"
                    class="btn rounded-circle btn-icon btn-secondary" title="Enable User">
                     <i class="fas fa-check-circle"></i>
                 </a>
@@ -89,7 +86,7 @@
     <p class="text-dark">No users found</p>
 </div>
 
-<div th:if="${totalPages > 0}">
+<div th:if="${totalPages > 1}">
     <nav aria-label="Users page navigation">
         <ul class="pagination justify-content-center">
             <li th:classappend="${currentPage == 1} ? 'disabled'" class="page-item">

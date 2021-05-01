@@ -1,13 +1,14 @@
 <!DOCTYPE HTML>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="common/header :: common-header"></div>
-    <title>QStore Control Panel</title>
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="common/header :: page-header('Home - QStore Admin')"></head>
 <body>
 <div th:replace="common/header :: navbar"></div>
 <div>
-    <h1>QStore Control Panel</h1>
+    <h2>QStore Control Panel</h2>
+    Hi,
+    <span sec:authentication="principal.fullName"></span>
+    <span sec:authentication="principal.authorities"></span>
 </div>
 <div th:replace="common/header :: footer"></div>
 </body>

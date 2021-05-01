@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="common/header :: common-header"></div>
-    <title th:text="${pageTitle}"></title>
-</head>
+<head th:replace="common/header :: page-header(${pageTitle})"></head>
 <body>
 <div th:replace="common/header :: navbar"></div>
 <div>
@@ -113,25 +110,7 @@
 <div th:replace="common/header :: footer"></div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#buttonCancel").on("click", function () {
-            window.location = "[[@{/users}]]";
-        });
-
-        $("#fileImage").change(function() {
-            showImageThumbnail(this);
-        });
-    });
-
-    function showImageThumbnail(fileInput) {
-        var file = fileInput.files[0];
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            $("#thumbnail").attr("src", e.target.result);
-        };
-
-        reader.readAsDataURL(file);
-    }
+    cancelUserFormURL = "[[@{/users}]]";
 
     function checkDuplicateEmail(form) {
         url = "[[@{/users/email_check}]]";
@@ -159,5 +138,6 @@
         $("#emailModal").modal();
     }
 </script>
+<script th:src="@{/js/common_user_form.js}"></script>
 </body>
 </html>
