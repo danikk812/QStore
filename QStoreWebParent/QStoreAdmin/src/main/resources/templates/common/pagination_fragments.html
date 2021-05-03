@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+
+<div th:fragment="pagination(moduleURL, entityName)" th:remove="tag">
+    <div class="text-center m-1" th:if="${totalItems > 0}">
+        <p class="text-dark" th:text="|Showing ${entityName} ${startCount} to ${endCount} of ${totalItems}|"></p>
+    </div>
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <p class="text-dark" th:text="|No ${entityName} found|"></p>
+    </div>
+
+    <div th:if="${totalPages > 1}">
+        <nav aria-label="Users page navigation">
+            <ul class="pagination justify-content-center">
+                <li th:classappend="${currentPage == 1} ? 'disabled'" class="page-item">
+                    <a th:replace="common/fragments :: page-link(${moduleURL}, 1, 'First')"></a>
+                </li>
+
+                <li th:classappend="${currentPage == 1} ? 'disabled'" class="page-item">
+                    <a th:replace="common/fragments :: page-link(${moduleURL}, ${currentPage - 1}, 'Previous')"></a>
+                </li>
+
+                <li th:classappend="${currentPage == page} ? 'active'"
+                    th:each="page : ${#numbers.sequence(1, totalPages)}"
+                    class="page-item">
+                    <a th:replace="common/fragments :: page-link(${moduleURL}, ${page}, ${page})"></a>
+                </li>
+
+                <li th:classappend="${currentPage == totalPages} ? 'disabled'" class="page-item">
+                    <a th:replace="common/fragments :: page-link(${moduleURL}, ${currentPage + 1}, 'Next')"></a>
+                </li>
+
+                <li th:classappend="${currentPage == totalPages} ? 'disabled'" class="page-item">
+                    <a th:replace="common/fragments :: page-link(${moduleURL}, ${totalPages}, 'Last')"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+</body>
+</html>

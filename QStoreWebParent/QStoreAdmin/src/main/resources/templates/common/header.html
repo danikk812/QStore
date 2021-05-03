@@ -32,9 +32,9 @@
     <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
         <button type="submit"></button>
     </form>
-    <nav class="navbar navbar-main navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-main navbar-expand-lg bg-dark navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}"><img th:src="@{/images/logo-small.png}" class="logo"></a>
+            <a class="navbar-brand" th:href="@{/}"><img th:src="@{/images/logo-small.png}" width="40" height="35" class="d-inline-block align-top"> QStore</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav2"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -42,29 +42,29 @@
             <div class="collapse navbar-collapse" id="main_nav2">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item" sec:authorize="hasAuthority('Admin')">
-                        <a class="nav-link" th:href="@{/users}"> Users </a>
+                        <a class="nav-link text-white" th:href="@{/users}"> Users </a>
                     </li>
 
                     <li class="nav-item" sec:authorize="hasAnyAuthority('Admin', 'ContentManager')">
-                        <a class="nav-link" th:href="@{/categories}"> Categories</a>
+                        <a class="nav-link text-white" th:href="@{/categories}"> Categories</a>
                     </li>
 
                     <li class="nav-item"  sec:authorize="hasAnyAuthority('Admin', 'ContentManager')">
-                        <a class="nav-link" th:href="@{/brands}"> Brands </a>
+                        <a class="nav-link text-white" th:href="@{/brands}"> Brands </a>
                     </li>
 
                     <li class="nav-item"  sec:authorize="hasAnyAuthority('Admin', 'SalesManager', 'ContentManager')">
-                        <a class="nav-link" th:href="@{/products}"> Products </a>
+                        <a class="nav-link text-white" th:href="@{/products}"> Products </a>
                     </li>
 
                     <li class="nav-item"  sec:authorize="hasAnyAuthority('Admin', 'SalesManager')">
-                        <a class="nav-link" th:href="@{/customers}"> Customers </a>
+                        <a class="nav-link text-white" th:href="@{/customers}"> Customers </a>
                     </li>
                 </ul>
 
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link icontext dropdown-toggle" href="" role="button" data-toggle="dropdown">
+                        <a class="nav-link icontext dropdown-toggle text-white" href="" role="button" data-toggle="dropdown">
                             <span class="icon mr-2">
 			                    <i class="fa fa-user"></i>
 		                    </span>

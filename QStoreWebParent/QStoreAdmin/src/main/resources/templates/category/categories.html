@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: page-header('Categories - QStore Admin')"></head>
+<body>
+<div th:replace="common/header :: navbar"></div>
+<div class="m-3">
+    <h2>Manage Categories</h2>
+    <a th:href="@{/categories/new}" class="btn btn-outline-primary">
+        <span class="text">New Category</span><i class="fa fa-folder-plus"></i>
+    </a>
+    &nbsp;|&nbsp;
+    <a th:href="@{/categories/export/excel}" class="btn btn-outline-primary">
+        <span class="text">Export to Excel</span><i class="fas fa-file-excel"></i>
+    </a>
+</div>
+
+<div th:if="${message != null}" th:text="${message}" class="alert alert-success text-center"></div>
+
+<div th:replace="common/fragments :: search-form('/categories/page/1')"></div>
+
+<div class="full-details">
+    <table class="table table-dark table-bordered table-striped table-hover table-responsive-xl">
+        <thead class="thead-light">
+        <tr>
+            <th>ID</th>
+            <th>Category Image</th>
+
+            <th th:replace="common/fragments :: column-link('/categories', 'name', 'Category Name')"></th>
+
+            <th>Alias</th>
+            <th>Enabled</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category : ${categoryList}">
+            <td th:text="${category.id}"></td>
+            <td>
+                <img class="img-sm" th:src="@{${category.getImagePath()}}">
+            </td>
+            <td th:text="${category.name}"></td>
+            <td th:text="${category.alias}"></td>
+            <td>
+                <div th:replace="common/fragments :: enabled-status(${category.enabled}, 'category', '/categories/' + ${category.id})"></div>
+
+            </td>
+            <td>
+                <div th:replace="common/fragments :: edit-action('category', '/categories/edit/' + ${category.id})"></div>
+                &nbsp;
+                <div th:replace="common/fragments :: delete-action('category', ${category.id}, '/categories/delete/' + ${category.id})"></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="common/pagination_fragments :: pagination('/categories', 'categories')"></div>
+
+<div th:replace="common/modal_fragments :: confirm-modal"></div>
+
+<div th:replace="common/header :: footer"></div>
+
+<script th:src="@{/js/common_lists.js}"></script>
+<script type="text/javascript">
+    clearFilterURL = "[[@{/categories}]]";
+
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this), 'category')
+        });
+    });
+
+</script>
+</body>
+</html>

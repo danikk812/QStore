@@ -4,18 +4,55 @@
     <meta charset="UTF-8">
 </head>
 <body>
-<th th:fragment="column-link(fieldName, columnName)">
-    <a class="text-white" th:text="${columnName}"
-       th:href="@{'/users/page/' +
+
+<th th:fragment="column-link(moduleURL, fieldName, columnName)">
+    <a class="text-gray" th:text="${columnName}"
+       th:href="@{${moduleURL} + '/page/' +
                    ${currentPage}(sortBy=${fieldName}, sortOrder=${sortBy != fieldName ? sortOrder : reverseSortOrder}, keyword=${keyword != null} ? ${keyword})}">
     </a>
     <i th:if="${sortBy == fieldName}"
        th:class="${sortOrder == 'asc'} ? 'fa fa-sort-up' : 'fa fa-sort-down'"></i>
 </th>
 
-<a th:fragment="page-link(pageNum, label)" class="page-link" th:text="${label}"
-   th:href="@{'/users/page/' + ${pageNum}(sortBy=${sortBy}, sortOrder=${sortOrder}, keyword=${keyword != null} ? ${keyword})}">
+<a th:fragment="page-link(moduleURL, pageNum, label)" class="page-link" th:text="${label}"
+   th:href="@{${moduleURL} + '/page/' + ${pageNum}(sortBy=${sortBy}, sortOrder=${sortOrder}, keyword=${keyword != null} ? ${keyword})}">
 </a>
+
+<div th:fragment="enabled-status(enabled, entityName, entityURL)" th:remove="tag">
+    <a th:if="${enabled}" th:href="@{${entityURL} +  '/enabled/false'}"
+       class="btn rounded-circle btn-icon btn-success" th:title="'Disable ' + ${entityName}">
+        <i class="fas fa-check-circle"></i>
+    </a>
+    <a th:unless="${enabled}" th:href="@{${entityURL} +  '/enabled/true'}"
+       class="btn rounded-circle btn-icon btn-secondary" th:title="'Enable ' + ${entityName}">
+        <i class="fas fa-check-circle"></i>
+    </a>
+</div>
+
+<div th:fragment="edit-action(entityName, editURL)" th:remove="tag">
+    <a th:href="@{${editURL}}" class="btn rounded-circle btn-icon btn-success"
+       th:title="'Edit ' + ${entityName}">
+        <i class="fa fa-edit"></i>
+    </a>
+</div>
+
+<div th:fragment="delete-action(entityName, entityId, deleteURL)" th:remove="tag">
+    <a th:href="@{${deleteURL}}" class="btn rounded-circle btn-icon btn-danger link-delete"
+       th:entityId="${entityId}" th:title="'Delete ' + ${entityName}">
+        <i class="fas fa-trash-alt"></i>
+    </a>
+</div>
+
+<div th:fragment="search-form(moduleURL)" class="m-3">
+    <form th:action="@{${moduleURL}}" class="form-inline">
+        <input type="hidden" name="sortBy" th:value="${sortBy}">
+        <input type="hidden" name="sortOrder" th:value="${sortOrder}">
+
+        <input type="search" name="keyword" th:value="${keyword}" class="form-control" placeholder="Search" required>
+        <button class="btn btn-primary mx-2" type="submit">Search</button>
+        <button class="btn btn-secondary" type="button" onclick="clearFilter()">Clear</button>
+    </form>
+</div>
 
 </body>
 </html>

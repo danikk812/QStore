@@ -46,7 +46,7 @@ public class UserController {
         modelAndView.addObject("currentPage", pageNum);
         modelAndView.addObject("startCount", startCount);
         modelAndView.addObject("endCount", endCount);
-        modelAndView.addObject("totalUsers", page.getTotalElements());
+        modelAndView.addObject("totalItems", page.getTotalElements());
 
 
         modelAndView.addObject("sortBy", sortBy);
@@ -123,6 +123,8 @@ public class UserController {
                                    ModelAndView modelAndView) {
         try {
             userService.delete(id);
+            String userPhotosDir = "/user-photos/" + id;
+            FileUtil.removeDir(userPhotosDir);
             redirectAttributes.addFlashAttribute("message", "The user with id " + id + " has been deleted successfully");
         } catch (UserNotFoundException ex) {
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
@@ -131,8 +133,8 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("/users/{id}/enabled/{status}")
-    public ModelAndView updateUserEnabledStatus(@PathVariable("id") Long id, @PathVariable("status") boolean enabled,
+    @GetMapping("/users/{id}/enabled/{enabledStatus}")
+    public ModelAndView updateUserEnabledStatus(@PathVariable("id") Long id, @PathVariable("enabledStatus") boolean enabled,
                                                 RedirectAttributes redirectAttributes, ModelAndView modelAndView) {
         userService.updateUserEnableStatus(id, enabled);
         String status = enabled ? "enabled" : "disabled";

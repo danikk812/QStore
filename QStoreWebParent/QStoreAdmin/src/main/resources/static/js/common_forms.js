@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $("#buttonCancel").on("click", function () {
-        window.location = cancelUserFormURL;
+        window.location = cancelFormURL;
     });
 
     $("#fileImage").change(function() {
@@ -16,4 +16,18 @@ function showImageThumbnail(fileInput) {
     };
 
     reader.readAsDataURL(file);
+}
+
+function showModalDialog(title, message) {
+    $("#modalTitle").text(title);
+    $("#modalBody").text(message);
+    $("#modalDialog").modal();
+}
+
+function showErrorModal(message) {
+    showModalDialog("Error", message);
+}
+
+function showWarningModal(message) {
+    showModalDialog("Warning", message);
 }

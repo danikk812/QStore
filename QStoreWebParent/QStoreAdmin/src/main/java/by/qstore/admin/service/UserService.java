@@ -89,6 +89,7 @@ public class UserService {
     public User getByEmail(String email) {
         return userRepository.getUserByEmail(email);
     }
+
     public boolean isEmailExist(Long id, String email) {
         User userByEmail = userRepository.getUserByEmail(email);
 

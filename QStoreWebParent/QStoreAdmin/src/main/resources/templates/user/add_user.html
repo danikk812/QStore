@@ -88,29 +88,12 @@
     </article>
 </div>
 
-<div class="modal fade" id="emailModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="modalTitle">Warning!</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-            <div class="modal-body">
-                <span id="modalBody"></span>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+<div th:replace="common/modal_fragments :: modal-dialog"></div>
 
 <div th:replace="common/header :: footer"></div>
 
 <script type="text/javascript">
-    cancelUserFormURL = "[[@{/users}]]";
+    cancelFormURL = "[[@{/users}]]";
 
     function checkDuplicateEmail(form) {
         url = "[[@{/users/email_check}]]";
@@ -122,22 +105,16 @@
             if (response == "false") {
                 form.submit();
             } else if (response == "true") {
-                showModalDialog("Warning!", "User with email " + userEmail + " already exists. Choose another email, please.")
+                showWarningModal("User with email " + userEmail + " already exists. Choose another email, please.")
             } else {
-                showModalDialog("Error", "Invalid server response");
+                showErrorModal("Invalid server response");
             }
         }).fail(function () {
-            showModalDialog("Error", "Fail to connect to the server");
+            showErrorModal("Fail to connect to the server");
         });
         return false;
     }
-
-    function showModalDialog(title, message) {
-        $("#modalTitle").text(title);
-        $("#modalBody").text(message);
-        $("#emailModal").modal();
-    }
 </script>
-<script th:src="@{/js/common_user_form.js}"></script>
+<script th:src="@{/js/common_forms.js}"></script>
 </body>
 </html>

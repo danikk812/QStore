@@ -81,7 +81,7 @@
 <div th:replace="common/header :: footer"></div>
 
 <script type="text/javascript">
-    cancelUserFormURL = "[[@{/}]]";
+    cancelFormURL = "[[@{/}]]";
 
     function checkPasswordMatch(confirmPassword) {
         if (confirmPassword.value != $("#password").val()) {
@@ -91,6 +91,6 @@
         }
     }
 </script>
-<script th:src="@{/js/common_user_form.js}"></script>
+<script th:src="@{/js/common_forms.js}"></script>
 </body>
 </html>

@@ -43,4 +43,14 @@ public class FileUtil {
             System.err.println("Fail to list directory: " + dirPath);
         }
     }
+
+    public static void removeDir(String dir) {
+        cleanDir(dir);
+
+        try {
+            Files.delete(Paths.get(dir));
+        } catch (IOException e) {
+            System.err.println("Fail to remove directory: " + dir);
+        }
+    }
 }
