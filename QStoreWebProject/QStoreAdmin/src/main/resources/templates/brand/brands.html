@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="common/header :: page-header('Brands - QStore Admin', 'none')"></head>
+<body>
+<div th:replace="common/header :: navbar"></div>
+<div class="m-3">
+    <h2>Manage Brands</h2>
+    <a th:href="@{/brands/new}" class="btn btn-outline-primary">
+        <span class="text">New Brand</span><i class="fa fa-folder-plus"></i>
+    </a>
+</div>
+
+<div th:if="${message != null}" th:text="${message}" class="alert alert-success text-center"></div>
+
+<div th:replace="common/fragments :: search-form('/brands/page/1')"></div>
+
+<div>
+    <table class="table table-dark table-bordered table-striped table-hover table-responsive-xl">
+        <thead class="thead-light">
+        <tr>
+            <th>Brand ID</th>
+
+            <th th:replace="common/fragments :: column-link('/brands', 'name', 'Brand Name')"></th>
+
+            <th>Categories</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="brand : ${brandList}">
+            <td th:text="${brand.id}"></td>
+            <td th:text="${brand.name}"></td>
+
+            <td>
+                <span class="badge badge-light m-1" th:each="category : ${brand.categories}" th:text="${category.name}"></span>
+            </td>
+
+
+            <td>
+                <div th:replace="common/fragments :: edit-action('brand', '/brands/edit/' + ${brand.id})"></div>
+                &nbsp;
+                <div th:replace="common/fragments :: delete-action('brand', ${brand.id}, '/brands/delete/' + ${brand.id})"></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="common/pagination_fragments :: pagination('/brands', 'brands')"></div>
+
+<div th:replace="common/modal_fragments :: confirm-modal"></div>
+
+<div th:replace="common/header :: footer"></div>
+
+<script th:src="@{/js/common_lists.js}"></script>
+<script type="text/javascript">
+    clearFilterURL = "[[@{/brands}]]";
+
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this), 'brand');
+        });
+    });
+</script>
+</body>
+</html>

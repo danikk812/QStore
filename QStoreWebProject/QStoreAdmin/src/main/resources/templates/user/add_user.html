@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: page-header(${pageTitle}, 'none')"></head>
+<body>
+<div th:replace="common/header :: navbar"></div>
+<div>
+    <h2>Manage Users</h2>
+</div>
+<div class="card mx-auto" style="max-width: 800px">
+    <article class="card-body">
+        <header class="mb-4">
+            <h4 class="card-title" th:text="${pageTitle}"></h4>
+        </header>
+        <form th:action="@{/users/save}" method="post" th:object="${userForm}" enctype="multipart/form-data"
+              onsubmit="return checkDuplicateEmail(this);">
+            <input type="hidden" th:field="*{id}">
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">E-mail:</label>
+                <div class="col-sm-8">
+                    <input type="email" class="form-control" th:field="*{email}" required minlength="8" maxlength="128">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">First Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" th:field="*{firstName}" required minlength="1"
+                           maxlength="50">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Last Name:</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" th:field="*{lastName}" required minlength="1"
+                           maxlength="50">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Password:</label>
+                <div class="col-sm-8">
+                    <input  th:required="${userForm.id == null}" type="password" class="form-control" th:field="*{password}" minlength="6"
+                           maxlength="20">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Roles:</label>
+                <div class="col-sm-8">
+                    <label class="custom-control custom-checkbox mb-3" th:each="role : ${roleList}">
+                        <input class="custom-control-input" id="customRoleCheck1" type="checkbox" th:field="*{roles}"
+                               th:value="${role.id}">
+                        <div class="custom-control-label" th:text="${role.name}"></div>
+                        <small class="form-text" th:text="${role.description}"></small>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Enabled:</label>
+                <div class="col-sm-8">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" th:field="*{enabled}" class="custom-control-input"
+                               id="customEnabledSwitch1">
+                        <label class="custom-control-label" for="customEnabledSwitch1">Enable User</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-4 col-form-label">Photo:</label>
+                <div class="col-sm-8">
+                    <div class="custom-file">
+                        <input type="hidden" th:field="*{photos}">
+                        <input type="file" id="fileImage" name="image" accept="image/png, image/jpeg">
+                        <img class="m-2 img-md" id="thumbnail" alt="Photo preview" th:src="@{${userForm.getPhotosImagePath()}}">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary m-3">Save</button>
+                <button type="button" class="btn btn-secondary" id="buttonCancel">Cancel</button>
+            </div>
+        </form>
+    </article>
+</div>
+
+<div th:replace="common/modal_fragments :: modal-dialog"></div>
+
+<div th:replace="common/header :: footer"></div>
+
+<script type="text/javascript">
+    cancelFormURL = "[[@{/users}]]";
+
+    function checkDuplicateEmail(form) {
+        url = "[[@{/users/email_check}]]";
+        userEmail = $("#email").val();
+        userId = $("#id").val();
+        params = {id: userId, email: userEmail};
+
+        $.post(url, params, function (response) {
+            if (response == "false") {
+                form.submit();
+            } else if (response == "true") {
+                showWarningModal("User with email " + userEmail + " already exists. Choose another email, please.")
+            } else {
+                showErrorModal("Invalid server response");
+            }
+        }).fail(function () {
+            showErrorModal("Fail to connect to the server");
+        });
+        return false;
+    }
+</script>
+<script th:src="@{/js/common_forms.js}"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: page-header('Users - QStore Admin', 'none')"></head>
+<body>
+<div th:replace="common/header :: navbar"></div>
+<div class="m-3">
+    <h2>Manage Users</h2>
+    <a th:href="@{/users/new}" class="btn btn-outline-primary">
+        <span class="text">New User</span><i class="fa fa-user-plus"></i>
+    </a>
+    &nbsp;|&nbsp;
+    <a th:href="@{/users/export/excel}" class="btn btn-outline-primary">
+        <span class="text">Export to Excel</span><i class="fas fa-file-excel"></i>
+    </a>
+</div>
+
+<div th:if="${message != null}" th:text="${message}" class="alert alert-success text-center"></div>
+
+<div th:replace="common/fragments :: search-form('/users/page/1')"></div>
+
+<div>
+    <table class="table table-dark table-bordered table-striped table-hover table-responsive-xl">
+        <thead class="thead-light">
+        <tr>
+            <th th:replace="common/fragments :: column-link('/users', 'id', 'User ID')">
+            <th>Photo</th>
+            <th th:replace="common/fragments :: column-link('/users', 'email', 'Email')">
+            <th th:replace="common/fragments :: column-link('/users', 'firstName', 'First Name')">
+            <th th:replace="common/fragments :: column-link('/users', 'lastName', 'Last Name')">
+            <th>Roles</th>
+            <th th:replace="common/fragments :: column-link('/users', 'enabled', 'Enabled')">
+
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${userList}">
+            <td th:text="${user.id}"></td>
+            <td>
+                <img th:if="${user.photos == null}" class="img-sm" th:src="@{/images/user-default.png}">
+                <img th:if="${user.photos != null}" class="img-sm" th:src="@{${user.getPhotosImagePath()}}">
+            </td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.roles}"></td>
+            <td>
+                <div th:replace="common/fragments :: enabled-status(${user.enabled}, 'user', '/users/' + ${user.id})"></div>
+            </td>
+            <td>
+                <div th:replace="common/fragments :: edit-action('user', '/users/edit/' + ${user.id})"></div>
+                &nbsp;&nbsp;
+                <div th:replace="common/fragments :: delete-action('user', ${user.id}, '/users/delete/' + ${user.id})"></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="common/pagination_fragments :: pagination('/users', 'users')"></div>
+
+<div th:replace="common/modal_fragments :: confirm-modal"></div>
+
+<div th:replace="common/header :: footer"></div>
+
+<script th:src="@{/js/common_lists.js}"></script>
+<script type="text/javascript">
+    clearFilterURL = "[[@{/users}]]";
+
+    $(document).ready(function () {
+        $(".link-delete").on("click", function (e) {
+            e.preventDefault();
+            showDeleteConfirmModal($(this), 'user')
+        });
+    });
+
+</script>
+</body>
+</html>

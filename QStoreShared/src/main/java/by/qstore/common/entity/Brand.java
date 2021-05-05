@@ -30,6 +30,11 @@ public class Brand {
         this.name = name;
     }
 
+    public Brand(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "Brand{" +

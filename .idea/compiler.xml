@@ -18,7 +18,7 @@
       <module name="QStoreAdmin" options="-parameters" />
       <module name="QStoreCustomer" options="-parameters" />
       <module name="QStoreShared" options="-parameters" />
-      <module name="QStoreWebParent" options="-parameters" />
+      <module name="QStoreWebProject" options="-parameters" />
     </option>
   </component>
 </project>
